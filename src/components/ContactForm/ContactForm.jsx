@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Forma, FormButton, FormField } from './ContactForm.styled';
-import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import { onSubmitForm } from 'Redux/Contacts/Slice';
 
-export const ContactForm = ({ onFormSubmit }) => {
+export const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  const dispatch = useDispatch();
 
   const inputHundleChange = event => {
     const { name, value } = event.target;
@@ -18,7 +20,7 @@ export const ContactForm = ({ onFormSubmit }) => {
         break;
 
       default:
-        console.warn(`Тип поля name-${name} не рбрабатываеться`);
+        console.warn(`Тип поля name-${name} не орбрабатываеться`);
         break;
     }
   };
@@ -26,15 +28,14 @@ export const ContactForm = ({ onFormSubmit }) => {
   const hundleSubmit = e => {
     e.preventDefault();
     const stateValue = { name, number };
-
-    onFormSubmit({ ...stateValue });
+    dispatch(onSubmitForm({ ...stateValue }));
     setName('');
     setNumber('');
   };
   return (
     <Forma onSubmit={hundleSubmit}>
       <FormField>
-        Namedsfgdf
+        Name
         <input
           type="text"
           value={name}
@@ -61,8 +62,4 @@ export const ContactForm = ({ onFormSubmit }) => {
       <FormButton type="submit">Add contact</FormButton>
     </Forma>
   );
-};
-
-ContactForm.propTypes = {
-  onFormSubmit: PropTypes.func.isRequired,
 };

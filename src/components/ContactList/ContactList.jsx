@@ -1,15 +1,33 @@
 import React from 'react';
 import { ButtonList, Item } from './ContactList.styled';
-import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteContact } from 'Redux/Contacts/Slice';
+import { selectContacts, selectFilter } from 'Redux/Contacts/Selectors';
 
-export const ContactList = ({ visibleContact, deleteContact }) => {
+export const ContactList = () => {
+  const dispatch = useDispatch();
+  const filter = useSelector(selectFilter);
+  const contacts = useSelector(selectContacts);
+
+  const visibleContacts = () => {
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filter.toLowerCase())
+    );
+  };
+  console.log(visibleContacts);
+  console.log(contacts);
+
   return (
     <ul>
-      {visibleContact.map(item => {
+      {/* {visibleContacts.map(item => { */}
+      {contacts.map(item => {
         return (
           <Item key={item.id}>
             {item.name}:{item.number}
-            <ButtonList type="button" onClick={() => deleteContact(item.id)}>
+            <ButtonList
+              type="button"
+              onClick={() => dispatch(deleteContact(item.id))}
+            >
               Delete
             </ButtonList>
           </Item>
@@ -17,9 +35,4 @@ export const ContactList = ({ visibleContact, deleteContact }) => {
       })}
     </ul>
   );
-};
-
-ContactList.propTypes = {
-  visibleContact: PropTypes.array.isRequired,
-  deleteContact: PropTypes.func.isRequired,
 };
